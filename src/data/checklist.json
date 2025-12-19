@@ -1,0 +1,134 @@
+{
+  "packLoad": {
+    "title": "📦 Paket Yükleme Kontrolü",
+    "groups": [
+      {
+        "groupLabel": "📝 Kasa Kalite Kontrol Listesi",
+        "items": [
+          { "name": "govdeQtemiz", "label": "Gövde içi ve dışının temizliği", "fieldType": "radio" },
+          { "name": "govdevQsapvida", "label": "Gövde içi saplamaları için vida delikleri", "fieldType": "radio" },
+          { "name": "govdeQhelicoil", "label": "Gövde helicoil ve perçinlenmesi", "fieldType": "radio" },
+          { "name": "govdeQtolerans", "label": "Gövde içi tolerans dışına taşmadan kaynaklanması", "fieldType": "radio" },
+          { "name": "govdeQsaplama", "label": "Saplamalar", "fieldType": "radio" },
+          { "name": "govdeQconta", "label": "Conta", "fieldType": "radio" },
+          { "name": "govdeQetiket", "label": "Gövde parçasının dış ve iç yüzey etiketlemesi", "fieldType": "radio" }
+        ]
+      }
+    ]
+  },
+
+  "m2p": {
+    "title": "🔧 Modül Montaj Kontrolü",
+    "groups": [
+      {
+        "groupLabel": "Modül Kalite Kontrol Listesi",
+        "items": [
+          { "name": "moduleClean", "label": "Modül temizliği", "fieldType": "radio" },
+          { "name": "internalResistance", "label": "Modül iç direnç değeri (mΩ)", "fieldType": "text" },
+          { "name": "moduleVoltage", "label": "Modül gerilim değeri (V)", "fieldType": "text" },
+          { "name": "moduleQresvolt", "label": "Modüllerin iç dirençleri ve gerilimleri", "fieldType": "radio" },
+          { "name": "moduleDirection", "label": "Modüllerin sıralanması  ve yönleri ", "fieldType": "radio" },
+          { "name": "modulePhoto", "label": "Modül montaj sonrası fotoğraf", "fieldType": "image" }
+        ]
+      }
+    ]
+  },
+
+  "bms": {
+    "title": "🧩 BMS Montaj Kontrolü",
+    "groups": [
+      {
+        "groupLabel": "BMS Kalite Kontrol Listesi",
+        "items": [
+          { "name": "bmsQDirection", "label": "BMS yerleşimi", "fieldType": "radio" },
+          { "name": "bmsQBusbar", "label": "Busbarlar", "fieldType": "radio" },
+          { "name": "bmsQTorkImarking", "label": "Tork ve Imarking", "fieldType": "radio" },
+          { "name": "bmsQConnections", "label": "Tüm bağlantılar ", "fieldType": "radio" },
+          { "name": "bmsQMounting", "label": "BMS montaj sağlamlığı", "fieldType": "radio" },
+          { "name": "bmsLogFile", "label": "BMS test logu", "fieldType": "file" }
+        ]
+      }
+    ]
+  },
+
+  "wiring": {
+    "title": "🔌 Wiring - Wire Harness Montaj Kontrolü",
+    "groups": [
+      {
+        "groupLabel": "Kablo Demeti Kalite Kontrol Listesi",
+        "items": [
+          { "name": "wireQConnectors", "label": "Konnektörler (krimp, sıralama, sonlandırma) doğrudur", "fieldType": "radio" },
+          { "name": "wireQCablePaths", "label": "Kablo yolları ve uzunlukları", "fieldType": "radio" },
+          { "name": "wireQBundling", "label": "Kablajların spiralle bez bantlanması", "fieldType": "radio" },
+          { "name": "wireQCommConfig", "label": "Batarya haberleşme kablajı konfigürasyonu", "fieldType": "radio" },
+          { "name": "wireQConnectorLocks", "label": "Konnektörlerin kilitlenmesi", "fieldType": "radio" },
+          { "name": "wireQBalanceGroup", "label": "Kablaj dengeleme grubu konfigürasyonu", "fieldType": "radio" },
+          { "name": "wireQBalanceRoute", "label": "Dengeleme ve haberleşme kablajlarının yolu", "fieldType": "radio" },
+          { "name": "wireQTension", "label": "Kablaj sonlandırmalarının gerginliği ", "fieldType": "radio" },
+          { "name": "wiresQRouting", "label": "Kabloların yönlendirilmesi", "fieldType": "radio" },
+          { "name": "wiresQConnections", "label": "Bağlantılar sağlamlığı ve güvenliği", "fieldType": "radio" },
+          { "name": "wiresQInsulation", "label": "Yalıtımı ve etiketlemeleri", "fieldType": "radio" },
+          { "name": "wiresDiagram", "label": "Kablo diyagramı yükle", "fieldType": "file" }
+        ]
+      }
+    ]
+  },
+
+  "cd": {
+    "title": "⚡ Şarj Deşarj Test Kontrolü",
+    "groups": [
+      {
+        "groupLabel": "Test Kalite Kontrol Listesi",
+        "items": [
+          { "name": "cdQBmsFirmwareVersion", "label": "BMS Yazılım Versiyonu", "fieldType": "text" },
+          { "name": "cdQOutputVoltageMeasurement", "label": "Çıkış Gerilimi Ölçümü", "fieldType": "text" },
+          { "name": "cdQBmsStartupAndCommunication", "label": "BMS Başlatma ve Haberleşme", "fieldType": "radio" },
+          { "name": "cdQBmsState", "label": "BMS State ", "fieldType": "radio" },
+          { "name": "cdQBmsIsolationMeasurement", "label": "BMS İzolasyon Ölçümü ", "fieldType": "text" },
+          { "name": "cdQBmsIsolationResistance", "label": "BMS İzolasyon Direnci", "fieldType": "text" },
+          { "name": "cdQIsolationResistanceMeasurement", "label": "İzolasyon Direnç Ölçümü", "fieldType": "radio" },
+          { "name": "cdQBatteryTemperatureValues", "label": "Batarya Sıcaklık Değerleri ", "fieldType": "text" },
+          { "name": "cdQBatteryCellVoltageRange", "label": "Batarya Max/Min Hücre Gerilimleri", "fieldType": "text" },
+          { "name": "cdQBmsErrorMessages", "label": "BMS Hata Mesajları", "fieldType": "radio" },
+          { "name": "cdQBmsBatteryVoltage", "label": "BMS Batarya Gerilim Değeri", "fieldType": "text" },
+          { "name": "cdQBmsChargeMode", "label": "BMS Şarj Modu ", "fieldType": "radio" },
+          { "name": "cdQBmsDischargeMode", "label": "BMS Deşarj Modu ", "fieldType": "radio" },
+          { "name": "cdQInitialChargeTest", "label": "İlk Şarj Denemesi ", "fieldType": "radio" },
+          { "name": "cdQInitialDischargeTest", "label": "İlk Deşarj Denemesi", "fieldType": "radio" },
+          { "name": "cdQHvilLine", "label": "HVIL Hattı ", "fieldType": "radio" },
+          { "name": "cdQFullChargeDischargeCapacity", "label": "Tam Şarj, Yarım Şarj ve Deşarj, Kapasite ve Gerilim Farkı ", "fieldType": "text" },
+          { "name": "cdQBatteryDcirTest", "label": "Batarya DCIR Testi", "fieldType": "text" }
+        ]
+      }
+    ]
+  },
+
+  "qc": {
+    "title": "🏁 Hat Sonu Kalite Kontrolü",
+    "groups": [
+      {
+        "groupLabel": "Kalite Kontrol Listesi",
+        "items": [
+          { "name": "qcQProductTraceability", "label": "Ürün Kimliği ve İzlenebilirlik Kontrolü", "fieldType": "radio" },
+          { "name": "qcQDocumentation", "label": "Üretim Dokümanları ve Test Raporları Kontrolü", "fieldType": "radio" },
+          { "name": "qcQVisualInspection", "label": "Genel Görsel Muayene (çatlak, deformasyon, hasar)", "fieldType": "radio" },
+          { "name": "qcQLabelingCheck", "label": "Etiketleme ve Uyarı İşaretlerinin Doğruluğu", "fieldType": "radio" },
+          { "name": "qcQMechanicalAssembly", "label": "Montaj Bütünlüğü ve Sabitleme Elemanları Kontrolü", "fieldType": "radio" },
+          { "name": "qcQTorqueCheck", "label": "Cıvata Sıkılık/Tork Kontrolü", "fieldType": "radio" },
+          { "name": "qcQCellVisual", "label": "Hücrelerin Görsel Durumu (şişme, sızıntı, deformasyon)", "fieldType": "radio" },
+          { "name": "qcQCellVoltageMatch", "label": "Hücre Gerilim Uyumu Kontrolü", "fieldType": "radio" },
+          { "name": "qcQConnectorLock", "label": "Konektör Kilidi ve Temas Bütünlüğü Kontrolü", "fieldType": "radio" },
+          { "name": "qcQSealInspection", "label": "Conta ve Sızdırmazlık Kontrolü", "fieldType": "radio" },
+          {"name": "qcQEndSealingTest", "label": "Son Sızdırmazlık Testi", "fieldType": "radio" },
+          {"name": "qcQSealingValue", "label": "Sızdırmazlık Verisi", "fieldType": "text" },
+          { "name": "qcQSignOff", "label": "Kalite Kontrol Onayı", "fieldType": "radio" },
+          { "name": "qcQFinalPhoto", "label": "Son Ürün Fotoğrafı", "fieldType": "image" },
+          { "name": "qcQReport", "label": "Kalite Kontrol Raporu Yükle", "fieldType": "file" },
+          { "name": "qcQInspectorName", "label": "Denetçi Adı Soyadı", "fieldType": "text" },
+          { "name": "qcQInspectionDate", "label": "Denetim Tarihi", "fieldType": "date" },
+          { "name": "qcQAdditionalNotes", "label": "Ek Notlar", "fieldType": "text" }
+        ]
+      }
+    ]
+  }
+}

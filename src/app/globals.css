@@ -24,3 +24,27 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+/* --- Kurumsal Logican Renkleri --- */
+:root {
+  --logican-darkBlue: #476C9B;
+  --logican-teal: #468C98;
+  --logican-lightBlue: #add9f4;
+  --logican-lightGray: #DFE0E2;
+  --logican-darkGray: #101419;
+  --logican-brickRed: #984447;
+}
+
+/* --- Tailwind utility sınıfları --- */
+.bg-logican-darkBlue { background-color: var(--logican-darkBlue) !important; }
+.bg-logican-teal { background-color: var(--logican-teal) !important; }
+.bg-logican-lightBlue { background-color: var(--logican-lightBlue) !important; }
+.bg-logican-lightGray { background-color: var(--logican-lightGray) !important; }
+.bg-logican-darkGray { background-color: var(--logican-darkGray) !important; }
+.bg-logican-brickRed { background-color: var(--logican-brickRed) !important; }
+
+.text-logican-darkBlue { color: var(--logican-darkBlue) !important; }
+.text-logican-teal { color: var(--logican-teal) !important; }
+.text-logican-lightBlue { color: var(--logican-lightBlue) !important; }
+.text-logican-lightGray { color: var(--logican-lightGray) !important; }
+.text-logican-darkGray { color: var(--logican-darkGray) !important; }
+.text-logican-brickRed { color: var(--logican-brickRed) !important; }
