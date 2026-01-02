@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useRouter } from "next/navigation";
 
 interface QrReaderProps {
   qrValue: string;
@@ -22,90 +23,98 @@ interface QrReaderProps {
 const QrReader: React.FC<QrReaderProps> = ({ qrValue, onQrChange }) => {
   const [error, setError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogInfo, setDialogInfo] = useState<{ seri?: string; kw?: string } | null>(null);
-  const theme = useTheme();
+  const [dialogInfo, setDialogInfo] =
+    useState<{ seri?: string; kw?: string } | null>(null);
+
+  const router = useRouter();
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const mode = prefersDarkMode ? "dark" : "light";
 
-  //  Beklenen format: G-S103011250052
-  const qrRegex = /^([GMBW])-S(\d{4})(\d{4})(\d{4})$/;
+  // QR format
+  const qrRegex = /^([GMBW])\*S(\d{4})(\d{4})(\d{4})$/;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.trim();
     onQrChange(value);
 
-    //  Boşsa sıfırla
     if (!value) {
       setError(null);
       return;
     }
 
-    //  Uzunluk kontrolü
     if (value.length > 15) {
       setError("❌ En fazla 15 karakter girebilirsiniz!");
       return;
     }
 
-    //  Regex kontrolü
     const match = qrRegex.exec(value);
     if (!match) {
-      setError("⚠️ QR sistematiğine uymuyor! Format: G-S103011250052");
+      setError("⚠️ QR sistematiğine uymuyor!");
       return;
     }
 
-    const [_, urunKodu, isEmri, tarih, sira] = match;
+    const [_, urunKodu, isEmri] = match;
 
-    //  Üretimde sadece G tipi izinli
     if (urunKodu !== "G") {
-      setError("❌ Şu anda üretim sadece 'G' (Gövde/Kasa) ürün kodu ile yapılabilir!");
+      setError("❌ Sadece G tipi üretime izinli!");
       return;
     }
 
-    //  Seri ve kW bilgisi çözümleme
-    const seriStr = isEmri.substring(0, 2); // örn: "10"
-    const kwStr = isEmri.substring(2, 5);   // örn: "30"
-    const seri = Number(seriStr);
-    const kw = Number(kwStr);
+    const seriStr = isEmri.substring(0, 2);
+    const kwStr = isEmri.substring(2, 5);
 
-    //  Seri kontrolü (10–16 arası olmalı)
-    if (isNaN(seri) || seri < 10 || seri > 16) {
-      setError("⚠️ Geçersiz seri sayısı! Seri sayısı 10 ile 16 arasında olmalıdır.");
-      return;
-    }
-
-    //  kW kontrolü (30 veya 60 olmalı)
-    if (![30, 60].includes(kw)) {
-      setError("⚠️ Geçersiz güç değeri! Yalnızca 30 kW veya 60 kW olabilir.");
-      return;
-    }
-
-    //  Tüm kontroller geçti
     setError(null);
-    setDialogInfo({ seri: seriStr, kw: kwStr });
-    setDialogOpen(true);
+
+    //  BACKEND’E SOR
+    const res = await fetch("/api/qr/check", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ qr: value }),
+    });
+
+    const data = await res.json();
+
+    switch (data.action) {
+      case "CONFIRM_NEW":
+        setDialogInfo({ seri: seriStr, kw: kwStr });
+        setDialogOpen(true);
+        break;
+
+      case "OPEN_FC":
+        router.push(`/forms/fc/${data.station}`);
+        break;
+
+      case "OPEN_QC":
+        router.push(`/forms/qc/${data.station}`);
+        break;
+
+      case "WARNING":
+        setError(data.message);
+        break;
+    }
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     setDialogOpen(false);
-    alert("✅ Üretim başlatıldı!");
-  };
 
-  const handleCancel = () => {
-    setDialogOpen(false);
-    alert("🚫 Üretim iptal edildi.");
+    const res = await fetch("/api/qr/confirm", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ qr: qrValue }),
+    });
+
+    const data = await res.json();
+
+    if (data.action === "OPEN_FC") {
+      router.push(`/forms/fc/${data.station}`);
+    }
   };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      gap={4}
-      p={4}
-    >
+    <Box display="flex" flexDirection="column" alignItems="center" gap={4} p={4}>
       <Box textAlign="center" width="100%" maxWidth={400}>
-        <Typography
+<Typography
           variant="body1"
           gutterBottom
           sx={{
@@ -133,34 +142,23 @@ const QrReader: React.FC<QrReaderProps> = ({ qrValue, onQrChange }) => {
           }}
         />
 
-        {/*  Ek hata bildirimi */}
-        {error && (
-          <Alert severity="error" sx={{ mt: 2 }}>
-            {error}
-          </Alert>
-        )}
+        {error && <Alert severity="error">{error}</Alert>}
       </Box>
 
-      {/* Onay Penceresi */}
-      <Dialog open={dialogOpen} onClose={handleCancel}>
+      <Dialog open={dialogOpen}>
         <DialogTitle>Üretim Onayı</DialogTitle>
         <DialogContent>
-          <Typography>
-            {dialogInfo && (
-              <>
-                Bu QR kod, <b>{dialogInfo.seri}</b> serili ve{" "}
-                <b>{dialogInfo.kw} kW</b> gücünde batarya üretimi içindir.
-                <br />
-                Üretime başlanacak, onaylıyor musunuz?
-              </>
-            )}
-          </Typography>
+          {dialogInfo && (
+            <Typography>
+              {dialogInfo.seri} seri – {dialogInfo.kw} kW üretim başlatılsın mı?
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancel} color="error">
+          <Button onClick={() => setDialogOpen(false)} color="error">
             İptal
           </Button>
-          <Button onClick={handleConfirm} variant="contained" color="primary">
+          <Button onClick={handleConfirm} variant="contained">
             Onayla
           </Button>
         </DialogActions>

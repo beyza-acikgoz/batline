@@ -1,61 +1,55 @@
 {
   "PackLoad": {
-    "title": "📦 Paket Yükleme Kontrolü",
+    "title": "📦 Paket Yükleme İşlemi",
     "groups": [
       {
-        "groupLabel": "📝 Kasa Kalite Kontrol Listesi",
+        "groupLabel": "📝 Kasa Proses Listesi",
         "items": [
           { "name": "govdeQtemiz", "label": "Gövde içi ve dışının temizliği", "fieldType": "radio" },
-          { "name": "govdevQsapvida", "label": "Gövde içi saplamaları için vida delikleri", "fieldType": "radio" },
-          { "name": "govdeQhelicoil", "label": "Gövde helicoil ve perçinlenmesi", "fieldType": "radio" },
-          { "name": "govdeQtolerans", "label": "Gövde içi tolerans dışına taşmadan kaynaklanması", "fieldType": "radio" },
-          { "name": "govdeQsaplama", "label": "Saplamalar", "fieldType": "radio" },
-          { "name": "govdeQconta", "label": "Conta", "fieldType": "radio" },
-          { "name": "govdeQetiket", "label": "Gövde parçasının dış ve iç yüzey etiketlemesi", "fieldType": "radio" }
+          { "name": "govdevSizdirmazlik", "label": "Gövde sızdırmazlık ölçüümü", "fieldType": "text" },
+          { "name": "govdeQsapvida", "label": "Gövdenin görseli", "fieldType": "file" }
         ]
       }
     ]
   },
 
   "M2P": {
-    "title": "🔧 Modül Montaj Kontrolü",
+    "title": "🔧 Modül Montaj İşlemi",
     "groups": [
       {
-        "groupLabel": "Modül Kalite Kontrol Listesi",
+        "groupLabel": "Modül Proses Listesi",
         "items": [
           { "name": "moduleClean", "label": "Modül temizliği", "fieldType": "radio" },
-          { "name": "internalResistance", "label": "Modül iç direnç değeri (mΩ) uygundur", "fieldType": "radio" },
-          { "name": "moduleVoltage", "label": "Modül gerilim değeri (V) uygundur", "fieldType": "radio" },
-          { "name": "moduleQresvolt", "label": "Modüllerin iç dirençleri ve gerilimleri", "fieldType": "radio" },
-          { "name": "moduleDirection", "label": "Modüllerin sıralanması  ve yönleri ", "fieldType": "radio" },
-          { "name": "modulePhoto", "label": "Modül montaj sonrası fotoğraf", "fieldType": "image" }
+          { "name": "internalResistance", "label": "Modül iç direnç değeri (mΩ)", "fieldType": "text" },
+          { "name": "moduleVoltage", "label": "Modül gerilim değeri (V)", "fieldType": "text" },
+          { "name": "moduleQresvolt", "label": "Modüllerin iç dirençleri ve gerilimleri", "fieldType": "text" },
+          { "name": "moduleDirection", "label": "Modüllerin sıralanması  ve yönleri ", "fieldType": "radio" }
         ]
       }
     ]
   },
 
   "BMS": {
-    "title": "🧩 BMS Montaj Kontrolü",
+    "title": "🧩 BMS Montaj İşlemi",
     "groups": [
       {
-        "groupLabel": "BMS Kalite Kontrol Listesi",
+        "groupLabel": "BMS Proses Listesi",
         "items": [
-          { "name": "bmsQDirection", "label": "BMS yerleşimi", "fieldType": "radio" },
+          { "name": "bmsQDirection", "label": "BMS yerleşim görseli", "fieldType": "file" },
           { "name": "bmsQBusbar", "label": "Busbarlar", "fieldType": "radio" },
-          { "name": "bmsQTorkImarking", "label": "Tork ve Imarking", "fieldType": "radio" },
+          { "name": "bmsQTorkImarking", "label": "Tork ve Imarking değerleri", "fieldType": "text" },
           { "name": "bmsQConnections", "label": "Tüm bağlantılar ", "fieldType": "radio" },
-          { "name": "bmsQMounting", "label": "BMS montaj sağlamlığı", "fieldType": "radio" },
-          { "name": "bmsLogFile", "label": "BMS test logu", "fieldType": "radio" }
+          { "name": "bmsLogFile", "label": "BMS test logu", "fieldType": "file" }
         ]
       }
     ]
   },
 
   "Wiring": {
-    "title": "🔌 Wiring - Wire Harness Montaj Kontrolü",
+    "title": "🔌 Wiring - Wire Harness Montaj İşlemi",
     "groups": [
       {
-        "groupLabel": "Kablo Demeti Kalite Kontrol Listesi",
+        "groupLabel": "Kablo Demeti Proses Listesi",
         "items": [
           { "name": "wireQConnectors", "label": "Konnektörler (krimp, sıralama, sonlandırma) doğrudur", "fieldType": "radio" },
           { "name": "wireQCablePaths", "label": "Kablo yolları ve uzunlukları", "fieldType": "radio" },
@@ -75,10 +69,10 @@
   },
 
   "CD": {
-    "title": "⚡ Şarj Deşarj Test Kontrolü",
+    "title": "⚡ Şarj Deşarj Test İşlemi",
     "groups": [
       {
-        "groupLabel": "Test Kalite Kontrol Listesi",
+        "groupLabel": "Test Proses Listesi",
         "items": [
           { "name": "cdQBmsFirmwareVersion", "label": "BMS Yazılım Versiyonu", "fieldType": "text" },
           { "name": "cdQOutputVoltageMeasurement", "label": "Çıkış Gerilimi Ölçümü", "fieldType": "text" },

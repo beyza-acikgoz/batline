@@ -1,6 +1,6 @@
 'use client';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { UseFormRegister, Control } from 'react-hook-form';
 import { Box, Typography, Radio, TextField, useMediaQuery, Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -35,6 +35,8 @@ const ApprovalGroup: React.FC<ApprovalGroupProps> = ({
   const [values, setValues] = useState<{ [key: string]: any }>({});
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+
 
   const handleChange = (name: string, value: any) => {
     setValues((prev) => ({ ...prev, [name]: value }));
@@ -64,7 +66,7 @@ const ApprovalGroup: React.FC<ApprovalGroupProps> = ({
               gap: 1,
               p: 2,
               borderRadius: 2,
-              bgcolor: '#fff',
+              bgcolor: '#4a4646ff',
               boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
               minWidth: 0,
             }}
@@ -110,9 +112,13 @@ const ApprovalGroup: React.FC<ApprovalGroupProps> = ({
                 placeholder="Değer giriniz"
                 fullWidth
                 value={values[item.name] || ''}
+                inputRef={(el) => (inputRefs.current[item.name] = el)}
+                onClick={() => inputRefs.current[item.name]?.focus()}
+                onFocus={() => inputRefs.current[item.name]?.focus()}
                 onChange={(e) => handleChange(item.name, e.target.value)}
               />
             )}
+
 
             {/* ✅ Date Field (Controller ile tam entegre) */}
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="tr">

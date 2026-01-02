@@ -157,50 +157,50 @@ export default function LoginPage() {
 
             <Box sx={{ backgroundColor:  '#F8F7FA' ,  borderRadius: 2, boxShadow: 3, p: 2 }}>
                 <TextField
-                fullWidth
-                name="email"
-                label="E-Posta"
-                type="email"
-                margin="normal"
-                placeholder="beyza@karluna.com"
-                sx={{ }}
-                slotProps={{
-                    input: {
-                    startAdornment: (
-                        <InputAdornment position="start">
-                        <PersonPinIcon />
-                        </InputAdornment>
-                    )
-                    }
-                }}
-            />
+                    fullWidth
+                    name="email"
+                    label="E-Posta"
+                    type="email"
+                    margin="normal"
+                    placeholder="beyza@karluna.com"
+                    sx={{ }}
+                    slotProps={{
+                        input: {
+                        startAdornment: (
+                            <InputAdornment position="start">
+                            <PersonPinIcon />
+                            </InputAdornment>
+                        )
+                        }
+                    }}
+                />
 
-            <TextField
-                fullWidth
-                name="password"
-                label="Şifre"
-                type={showPassword ? 'text' : 'password'}
-                margin="normal"
-                slotProps={{
-                    input: {
-                    startAdornment: (
-                        <InputAdornment position="start">
-                        <LockOutlined />
-                        </InputAdornment>
-                    ),
-                    endAdornment: (
-                        <InputAdornment position="end">
-                        <IconButton
-                            onClick={() => setShowPassword(!showPassword)}
-                            edge="end"
-                        >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                        </InputAdornment>
-                    )
-                    }
-                }}
-            />
+                <TextField
+                    fullWidth
+                    name="password"
+                    label="Şifre"
+                    type={showPassword ? 'text' : 'password'}
+                    margin="normal"
+                    slotProps={{
+                        input: {
+                        startAdornment: (
+                            <InputAdornment position="start">
+                            <LockOutlined />
+                            </InputAdornment>
+                        ),
+                        endAdornment: (
+                            <InputAdornment position="end">
+                            <IconButton
+                                onClick={() => setShowPassword(!showPassword)}
+                                edge="end"
+                            >
+                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                            </InputAdornment>
+                        )
+                        }
+                    }}
+                />
             </Box>    
             <Box
                 sx={{
