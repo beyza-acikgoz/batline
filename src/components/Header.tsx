@@ -101,7 +101,8 @@ const Header: React.FC = () => {
             className="sm:w-20 sm:h-20 w-16 h-16"
           />
           <Link
-            href="/"
+            href="/dashboard"
+            prefetch={false}
             className="text-lg sm:text-2xl font-bold hover:opacity-90 text-center sm:text-left"
           >
             BatLine - Batarya Paket Üretim Hattı

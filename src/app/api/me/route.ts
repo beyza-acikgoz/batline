@@ -31,8 +31,8 @@ export function GET(req: NextRequest) {
         firstName: decoded.firstName,
         lastName: decoded.lastName,
         role: decoded.role,
-        rework: decoded.rework
-      }
+        rework: decoded.rework,
+      },
     });
   } catch {
     return NextResponse.json(

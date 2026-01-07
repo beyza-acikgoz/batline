@@ -10,10 +10,12 @@ export default function ClientLayout({
 }) {
   const pathname = usePathname();
   const isLoginPage = pathname === "/login";
+  const isUnauthorizedPage = pathname === "/unauthorized";
+
 
   return (
     <>
-      {!isLoginPage && <Header />}
+      {!isLoginPage && !isUnauthorizedPage && <Header />}
 
       <main
         className={`flex-1 w-full ${

@@ -95,21 +95,25 @@ const QrReader: React.FC<QrReaderProps> = ({ qrValue, onQrChange }) => {
     }
   };
 
-  const handleConfirm = async () => {
-    setDialogOpen(false);
+const handleConfirm = async () => {
+  setDialogOpen(false);
 
-    const res = await fetch("/api/qr/confirm", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ qr: qrValue }),
-    });
+  const res = await fetch("/api/qr/confirm", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      qr: qrValue,
+      product_id: true, // üretim onayı ile birlikte id true gönderiliyor
+    }),
+  });
 
-    const data = await res.json();
+  const data = await res.json();
 
-    if (data.action === "OPEN_FC") {
-      router.push(`/forms/fc/${data.station}`);
-    }
-  };
+  if (data.action === "OPEN_FC") {
+    router.push(`/forms/fc/${data.station}`);
+  }
+};
+
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" gap={4} p={4}>

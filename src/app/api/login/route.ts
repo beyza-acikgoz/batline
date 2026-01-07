@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
 
-    /*  MEMBERS API */
+    /* MEMBERS API */
     const memberRes = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/members`
     );
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
 
     const { rolename, rework } = roleResult.rows[0];
 
-    /*  JWT */
+    /* JWT */
     const token = jwt.sign(
       {
         sub: member.id,
@@ -88,7 +88,7 @@ export async function POST(req: Request) {
     res.cookies.set("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax", // ⬅ önemli
       maxAge: 60 * 60,
       path: "/",
     });

@@ -1,178 +1,176 @@
-'use client';
+"use client";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useRef } from 'react';
-import { UseFormRegister, Control } from 'react-hook-form';
-import { Box, Typography, Radio, TextField, useMediaQuery, Button } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
-import 'dayjs/locale/tr';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import {
+  Box,
+  Typography,
+  Radio,
+  TextField,
+  Button,
+} from "@mui/material";
+import { Controller } from "react-hook-form";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import "dayjs/locale/tr";
 
-export interface ApprovalItem {
-  name: string;
-  label: string;
-  fieldType?: 'radio' | 'text' | 'file' | 'image' | 'date';
-  validation?: any;
-}
-
-
-interface ApprovalGroupProps {
-  groupLabel: string;
-  items: ApprovalItem[];
-  register: UseFormRegister<any>;
-  control: Control<any>;
-  errors?: any;
-}
-
-const ApprovalGroup: React.FC<ApprovalGroupProps> = ({
-  groupLabel,
-  items,
+export default function ApprovalGroup({
+  field,
   register,
+  control,
   errors,
-}) => {
-  const [values, setValues] = useState<{ [key: string]: any }>({});
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
-
-
-  const handleChange = (name: string, value: any) => {
-    setValues((prev) => ({ ...prev, [name]: value }));
-  };
-
+}: any) {
   return (
-    <Box sx={{ mb: 3, width: '100%', overflowX: 'auto' }}>
-      <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        {groupLabel}
+    <Box
+      sx={{
+        mb: 3,
+        p: 2,
+        borderRadius: 2,
+        boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+      }}
+    >
+      <Typography sx={{ mb: 1, fontWeight: 500 }}>
+        {field.label}
       </Typography>
 
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-          gap: 2,
-        }}
-      >
-        {items.map((item) => (
-          <Box
-            key={item.name}
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              justifyContent: 'space-between',
-              gap: 1,
-              p: 2,
-              borderRadius: 2,
-              bgcolor: '#4a4646ff',
-              boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-              minWidth: 0,
+      {/* ========= RADIO ========= */}
+      {field.type === "radio" && (
+        <Controller
+          name={field.name}
+          control={control}
+          rules={{
+            required: field.required && "Bu alan zorunludur",
+          }}
+          render={({ field: ctrl }) => (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column", // ✅ her zaman alt alta
+                gap: 1.5,
+              }}
+            >
+              {field.options.map((opt: any) => (
+                <Box
+                  key={opt.value}
+                  onClick={() => ctrl.onChange(opt.value)}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    p: 1.2,
+                    borderRadius: 2,
+                    border: "1px solid",
+                    borderColor:
+                      ctrl.value === opt.value
+                        ? "primary.main"
+                        : "divider",
+                    bgcolor:
+                      ctrl.value === opt.value
+                        ? "action.selected"
+                        : "background.paper",
+                    cursor: "pointer",
+                  }}
+                >
+                  <Radio
+                    size="small"
+                    checked={ctrl.value === opt.value}
+                  />
+                  <Typography variant="body2">
+                    {opt.label}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
+          )}
+        />
+      )}
+    
+ 
+
+      {/* ========= TEXT ========= */}
+      {field.type === "text" && (
+        <TextField
+          fullWidth
+          size="small"  
+          {...register(field.name, {
+            required: field.required && "Bu alan zorunludur",
+          })}
+          error={!!errors?.[field.name]}
+          helperText={errors?.[field.name]?.message}
+        />
+      )}
+
+      {/* ========= DATE ========= */}
+      {field.type === "date" && (
+        <LocalizationProvider
+          dateAdapter={AdapterDayjs}
+          adapterLocale="tr"
+        >
+          <Controller
+            name={field.name}
+            control={control}
+            rules={{
+              required: field.required && "Bu alan zorunludur",
             }}
-          >
-            <Typography sx={{ fontWeight: 500, mb: 1, wordBreak: 'break-word' }}>
-              {item.label}
-            </Typography>
-
-            {/* ✅ Radio Field */}
-            {item.fieldType === 'radio' && (
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: isSmallScreen ? 'column' : 'row',
-                  alignItems: isSmallScreen ? 'flex-start' : 'center',
-                  gap: isSmallScreen ? 1 : 3,
-                  flexWrap: 'wrap',
+            render={({ field: ctrl }) => (
+              <DatePicker
+                format="DD/MM/YYYY"
+                value={ctrl.value ? dayjs(ctrl.value) : null}
+                onChange={(val) =>
+                  ctrl.onChange(val ? val.toISOString() : null)
+                }
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                    size: "small",
+                    error: !!errors?.[field.name],
+                    helperText: errors?.[field.name]?.message,
+                  },
                 }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Radio
-                    {...register(item.name, item.validation || { required: 'Bu alan zorunludur.' })}
-                    checked={values[item.name] === 'uygun'}
-                    onChange={() => handleChange(item.name, 'uygun')}
-                  />
-                  <Typography variant="body2">Uygundur</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Radio
-                    {...register(item.name, item.validation || { required: 'Bu alan zorunludur.' })}
-                    checked={values[item.name] === 'uygunsuz'}
-                    onChange={() => handleChange(item.name, 'uygunsuz')}
-                  />
-                  <Typography variant="body2">Uygun değildir</Typography>
-                </Box>
-              </Box>
-            )}
-
-            {/* ✅ Text Field */}
-            {item.fieldType === 'text' && (
-              <TextField
-                {...register(item.name, item.validation || { required: 'Bu alan zorunludur.' })}
-                placeholder="Değer giriniz"
-                fullWidth
-                value={values[item.name] || ''}
-                inputRef={(el) => (inputRefs.current[item.name] = el)}
-                onClick={() => inputRefs.current[item.name]?.focus()}
-                onFocus={() => inputRefs.current[item.name]?.focus()}
-                onChange={(e) => handleChange(item.name, e.target.value)}
               />
             )}
+          />
+        </LocalizationProvider>
+      )}
 
-
-            {/* ✅ Date Field (Controller ile tam entegre) */}
-            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="tr">
-              {item.fieldType === 'date' && (
-                <DatePicker
-                  label={item.label}
-                  format="DD/MM/YYYY" // Gün, Ay, Yıl sırası
-                  value={values[item.name] || dayjs()}
-                  onChange={(newValue) => handleChange(item.name, newValue)}
-                  slotProps={{
-                    textField: {
-                      fullWidth: true,
-                      error: !!errors[item.name],
-                      helperText: errors[item.name]?.message,
-                    },
-                  }}
+      {/* ========= FILE ========= */}
+      {field.type === "file" && (
+        <Controller
+          name={field.name}
+          control={control}
+          rules={{
+            required: field.required && "Bu alan zorunludur",
+          }}
+          render={({ field: ctrl }) => (
+            <Box>
+              <Button variant="outlined" component="label">
+                Dosya Yükle
+                <input
+                  type="file"
+                  hidden
+                  onChange={(e) =>
+                    ctrl.onChange(e.target.files?.[0] || null)
+                  }
                 />
+              </Button>
+
+              {ctrl.value && (
+                <Typography variant="body2" sx={{ mt: 1 }}>
+                  Seçilen dosya: {ctrl.value.name}
+                </Typography>
               )}
-            </LocalizationProvider>
+            </Box>
+          )}
+        />
+      )}
 
-
-            {/* ✅ File / Image Field */}
-            {(item.fieldType === 'file' || item.fieldType === 'image') && (
-              <Box sx={{ mt: 1 }}>
-                <Button variant="outlined" component="label">
-                  Dosya Yükle
-                  <input
-                    type="file"
-                    hidden
-                    {...register(item.name)}
-                    onChange={(e) =>
-                      handleChange(item.name, e.target.files ? e.target.files[0] : null)
-                    }
-                  />
-                </Button>
-                {values[item.name] && (
-                  <Typography variant="body2" sx={{ mt: 0.5 }}>
-                    Seçilen dosya: {values[item.name].name || 'Dosya seçildi'}
-                  </Typography>
-                )}
-              </Box>
-            )}
-
-            {/* ✅ Error Display */}
-            {errors?.[item.name] && (
-              <Typography color="error" variant="body2" sx={{ mt: 0.5 }}>
-                {errors[item.name]?.message}
-              </Typography>
-            )}
-          </Box>
-        ))}
-      </Box>
+      {/* ========= ERROR ========= */}
+      {errors?.[field.name] && (
+        <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+          {errors[field.name]?.message}
+        </Typography>
+      )}
     </Box>
   );
-};
-
-export default ApprovalGroup;
+}
