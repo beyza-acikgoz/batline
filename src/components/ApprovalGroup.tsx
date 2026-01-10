@@ -114,21 +114,33 @@ export default function ApprovalGroup({
               required: field.required && "Bu alan zorunludur",
             }}
             render={({ field: ctrl }) => (
-              <DatePicker
-                format="DD/MM/YYYY"
-                value={ctrl.value ? dayjs(ctrl.value) : null}
-                onChange={(val) =>
-                  ctrl.onChange(val ? val.toISOString() : null)
+            <DatePicker
+              format="DD/MM/YYYY"
+              value={ctrl.value ? dayjs(ctrl.value) : null}
+
+              onChange={(val) => {
+                if (val && val.isValid()) {
+                  ctrl.onChange(val.toISOString());
+                } else {
+                  ctrl.onChange(null);
                 }
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    size: "small",
-                    error: !!errors?.[field.name],
-                    helperText: errors?.[field.name]?.message,
-                  },
-                }}
-              />
+              }}
+
+              onError={() => {
+                // geçersiz input -> state değiştirme
+                ctrl.onChange(null);
+              }}
+
+              slotProps={{
+                
+                textField: {
+                  fullWidth: true,
+                  size: "small",
+                  error: !!errors?.[field.name],
+                  helperText: errors?.[field.name]?.message,
+                },
+              }}
+            />
             )}
           />
         </LocalizationProvider>

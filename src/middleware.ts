@@ -15,57 +15,55 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/login") ||
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
-    pathname === "/" ||
-    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/image") ||
     pathname.startsWith("/unauthorized")
   ) {
     return NextResponse.next();
   }
 
   /* =====================
-     FORMS → TOKEN ŞART
+     ROOT → LOGIN
   ====================== */
-  if (pathname.startsWith("/forms") && !token) {
-    console.log("[MIDDLEWARE] TOKEN YOK");
+  if (pathname === "/" && !token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
+  /* =====================
+     TOKEN ZORUNLU
+  ====================== */
   if (!token) {
-    return NextResponse.next();
+    console.log("[MIDDLEWARE] TOKEN YOK:", pathname);
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
   /* =====================
-     TOKEN VERIFY (EDGE SAFE)
+     TOKEN VERIFY
   ====================== */
   let role: string;
 
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
-
     const { payload } = await jwtVerify(token, secret);
 
     role = String(payload.role)
       .toLowerCase()
       .replace(/\s+/g, "_");
-
   } catch (err) {
-    console.log("[MIDDLEWARE] TOKEN GEÇERSİZ (EDGE)");
-    return NextResponse.rewrite(
-      new URL("/unauthorized", req.url)
-    );
+    console.log("[MIDDLEWARE] TOKEN GEÇERSİZ");
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
   console.log("[MIDDLEWARE] ROLE =", role, "| PATH =", pathname);
 
   /* =====================
-     ADMIN & YETKİN
+     ADMIN & YETKİLİ
   ====================== */
   if (SUPER_ROLES.includes(role)) {
     return NextResponse.next();
   }
 
   /* =====================
-     FC
+     FORMS / FC
   ====================== */
   if (pathname.startsWith("/forms/fc")) {
     if (role === "operator" || role === "test_engineer") {
@@ -73,13 +71,13 @@ export async function middleware(req: NextRequest) {
     }
 
     console.log("[MIDDLEWARE] FC YETKİ YOK:", role);
-    return NextResponse.rewrite(
+    return NextResponse.redirect(
       new URL(`/unauthorized?role=${role}`, req.url)
     );
   }
 
   /* =====================
-     QC
+     FORMS / QC
   ====================== */
   if (pathname.startsWith("/forms/qc")) {
     if (role === "quality_engineer") {
@@ -87,14 +85,17 @@ export async function middleware(req: NextRequest) {
     }
 
     console.log("[MIDDLEWARE] QC YETKİ YOK:", role);
-    return NextResponse.rewrite(
+    return NextResponse.redirect(
       new URL(`/unauthorized?role=${role}`, req.url)
     );
   }
 
+  /* =====================
+     DİĞER ROUTES
+  ====================== */
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)", "/public/image/pages/auth-v2-login-illustration-dark.png", "/public/image/pages/auth-v2-login-illustration-light.png", "/public"],
 };
