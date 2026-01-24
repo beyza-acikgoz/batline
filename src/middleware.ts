@@ -40,6 +40,7 @@ export async function middleware(req: NextRequest) {
      TOKEN VERIFY
   ====================== */
   let role: string;
+  let rework: boolean;
 
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
@@ -48,12 +49,13 @@ export async function middleware(req: NextRequest) {
     role = String(payload.role)
       .toLowerCase()
       .replace(/\s+/g, "_");
+    rework = Boolean(payload.rework);
   } catch (err) {
     console.log("[MIDDLEWARE] TOKEN GEÇERSİZ");
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  console.log("[MIDDLEWARE] ROLE =", role, "| PATH =", pathname);
+  console.log("[MIDDLEWARE] ROLE =", role, "| PATH =", pathname, "REWORK =", rework);
 
   /* =====================
      ADMIN & YETKİLİ
@@ -88,6 +90,21 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(
       new URL(`/unauthorized?role=${role}`, req.url)
     );
+  }
+
+    /* =====================
+     REWORK START / FINISH
+  ====================== */
+  if (pathname.startsWith("/rework/start") || pathname.startsWith("/rework/finish")) {
+    if (rework === true ) {
+      // Rework başlatma sayfası için rework durumu true olmalı  
+        return NextResponse.next();
+      }
+      console.log("[MIDDLEWARE] REWORK DURUMU UYGUN DEĞİL:", rework);
+      return NextResponse.redirect(
+        new URL(`/unauthorized?role=${role}`, req.url)
+      );
+    console.log("[MIDDLEWARE] REWORK YETKİSİ:", rework);
   }
 
   /* =====================

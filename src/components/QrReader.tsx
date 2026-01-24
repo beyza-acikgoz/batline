@@ -82,11 +82,15 @@ const QrReader: React.FC<QrReaderProps> = ({ qrValue, onQrChange }) => {
         break;
 
       case "OPEN_FC":
-        router.push(`/forms/fc/${data.station}`);
+        router.push(
+          `/forms/fc/${data.station}?qr=${encodeURIComponent(value)}`
+        );
         break;
 
       case "OPEN_QC":
-        router.push(`/forms/qc/${data.station}`);
+        router.push(
+          `/forms/qc/${data.station}?qr=${encodeURIComponent(value)}`
+        );
         break;
 
       case "WARNING":

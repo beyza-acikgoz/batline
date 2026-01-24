@@ -3,12 +3,20 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+type User = {
+  firstName: string;
+  lastName: string;
+  role: string;
+  rework: boolean;
+};
+
 export default function Unauthorized() {
   const router = useRouter();
-  const [role, setRole] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadRole = async () => {
+    const loadUser = async () => {
       try {
         const res = await fetch("/api/me", {
           credentials: "include",
@@ -17,16 +25,19 @@ export default function Unauthorized() {
         if (!res.ok) return;
 
         const data = await res.json();
-        if (data?.success) {
-          setRole(data.user.role);
-          console.log("CLIENT ROLE:", data.user.role);
+
+        if (data?.success && data.user) {
+          setUser(data.user);
+          console.log("CLIENT USER:", data.user);
         }
       } catch (err) {
-        console.error("Role fetch error", err);
+        console.error("User fetch error", err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    loadRole();
+    loadUser();
   }, []);
 
   return (
@@ -36,17 +47,39 @@ export default function Unauthorized() {
           Yetkisiz Erişim
         </h2>
 
-        <p className="text-gray-600 mb-2">
-          Bu sayfaya erişim yetkiniz yok.
+        <p className="text-lg text-gray-600 mb-2">
+          {loading
+            ? "Kullanıcı bilgileri yükleniyor..."
+            : user
+            ? `${user.firstName} ${user.lastName}, bu sayfaya erişim yetkiniz yok.`
+            : "Bu sayfaya erişim yetkiniz yok."}
         </p>
 
-        <p className="text-sm text-gray-500 mb-6">
-          Rolünüz: <b>{role ?? "yükleniyor..."}</b>
+        <p className="text-lg text-gray-500 mb-6">
+          Rolünüz:{" "}
+          <b>
+            {loading
+              ? "yükleniyor..."
+              : user?.role ?? "bilinmiyor"}
+          </b>
+        </p>
+
+        <p className="text-lg text-gray-500 mb-6">
+          Rework Yetkinliğiniz:{" "}
+          <b>
+            {loading
+              ? "yükleniyor..."
+              : user
+              ? user.rework
+                ? "VAR"
+                : "YOK"
+              : "bilinmiyor"}
+          </b>
         </p>
 
         <button
           onClick={() => router.back()}
-          className="px-5 py-2 bg-blue-600 text-white rounded-lg"
+          className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
         >
           Geri Dön
         </button>

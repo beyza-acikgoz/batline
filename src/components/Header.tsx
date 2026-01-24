@@ -11,6 +11,7 @@ import {
   Divider,
   Typography,
   ListItemText,
+  Button,
 } from "@mui/material";
 
 const Header: React.FC = () => {
@@ -96,6 +97,7 @@ const Header: React.FC = () => {
           <Image
             src="/batline.png"
             alt="BatLine"
+            //style={{width:"80px", height:"100px"}}
             width={80}
             height={100}
             className="sm:w-20 sm:h-20 w-16 h-16"
@@ -109,6 +111,17 @@ const Header: React.FC = () => {
           </Link>
         </div>
 
+          <Button onClick={() => router.push('/lineview')} variant="text" color="primary">
+            Hat İzleme
+          </Button>
+          <Button onClick={() => router.push('/rework/start')} variant="contained" color="primary">
+            Rework Başlat
+          </Button>
+
+          <Button onClick={() => router.push('/rework/finish')} variant="outlined" color="primary">    
+            Rework Bitir
+          </Button>
+
         {/* Menü + Profil */}
         <div className="flex items-center space-x-4 mt-2 sm:mt-0">
           <Image
@@ -118,6 +131,8 @@ const Header: React.FC = () => {
             height={250}
             className="inline-block w-32 sm:w-36 h-auto"
           />
+
+
 
           {/* MUI Profil */}
           <Avatar
