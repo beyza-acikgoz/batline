@@ -1,12 +1,13 @@
 import sql from "mssql";
+import 'dotenv/config';
 
-const config = {
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  server: process.env.DB_SERVER,
-  database: process.env.DB_NAME,
+const config: sql.config = {
+  user: process.env.DB_USER ?? "default_user",
+  password: process.env.DB_PASS ?? "default_password",
+  server: process.env.DB_SERVER ?? "localhost",
+  database: process.env.DB_NAME ?? "default_db",
   options: {
-    encrypt: false,
+    encrypt: true,
     trustServerCertificate: true,
   },
 };
@@ -14,7 +15,8 @@ const config = {
 // Connection pool (tek sefer oluşturulur)
 const poolPromise = new sql.ConnectionPool(config).connect();
 
-export async function GET(req) {
+// Burada parametreye tip ekleyerek noImplicitAny hatasını önlüyoruz
+export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const qr = searchParams.get("qr");
@@ -43,7 +45,7 @@ export async function GET(req) {
       processStatus: result.output.Process_Status,
     });
 
-  } catch (err) {
+  } catch (err: any) {
     return Response.json({
       success: false,
       error: err.message,
