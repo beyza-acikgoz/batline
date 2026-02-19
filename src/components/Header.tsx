@@ -111,7 +111,7 @@ const Header: React.FC = () => {
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
-          onClose={() => setAnchorEl(null)}
+          onClose={() => setAnchorEl(null)}  
         >
           <MenuItem>
             <ListItemText

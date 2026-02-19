@@ -46,7 +46,7 @@ export default function ApprovalGroup({
             <Box
               sx={{
                 display: "flex",
-                flexDirection: "column", // ✅ her zaman alt alta
+                flexDirection: "column", // her zaman alt alta
                 gap: 1.5,
               }}
             >
