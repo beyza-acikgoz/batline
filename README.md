@@ -1,36 +1,181 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+#  Batline – Battery Production Line Data Collection & Traceability System
 
-First, run the development server:
+Batline, batarya üretim hatlarında **veri toplama, operatör yönlendirme ve izlenebilirlik** süreçlerini dijitalleştirmek amacıyla geliştirilmiş bir web uygulamasıdır.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Sistem, QR kod üzerinden istasyon tespiti yaparak ilgili üretim formunu otomatik olarak açar, operatörün formu doldurmasını sağlar ve girilen verileri kayıt altına alarak uçtan uca izlenebilirlik sunar.
+
+Uygulama **Next.js** ile geliştirilmiştir ve form tanımlarını merkezi olarak yönetilen `mes-admin` projesinden dinamik olarak çekmektedir.
+
+---
+
+## 🎯 Projenin Amacı
+
+- Üretim hattında manuel form takibini ortadan kaldırmak  
+- İstasyon bazlı doğru form yönlendirmesi sağlamak  
+- Üretim verilerini merkezi ve güvenilir şekilde kaydetmek  
+- İzlenebilirlik (traceability) gereksinimlerini karşılamak  
+- Operatör hatalarını minimize etmek  
+- Kağıtsız üretim ortamı oluşturmak  
+
+---
+
+## 🏭 Sistem Nasıl Çalışır?
+
+1. Operatör üretim hattındaki istasyonda bulunan QR kodu okutur.
+2. QR içeriğine göre sistem ilgili **istasyonu** belirler.
+3. `mes-admin` sisteminden o istasyona tanımlı form şeması çekilir.
+4. İlgili form dinamik olarak oluşturulur ve ekranda açılır.
+5. Operatör formu doldurur.
+6. Girilen veriler backend'e iletilir ve veri tabanında saklanır.
+7. Veriler üretim partisi / seri numarası ile ilişkilendirilerek izlenebilirlik sağlanır.
+
+---
+
+## 🧩 Mimari Akış
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+QR Scanner
+↓
+Station Detection
+↓
+Form Definition (karluna-mes-admin)
+↓
+Dynamic Form Rendering (Next.js)
+↓
+Validation & Submission
+↓
+Data Storage & Traceability
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🚀 Kullanılan Teknolojiler
 
-To learn more about Next.js, take a look at the following resources:
+- **Next.js**
+- React
+- TypeScript
+- REST API entegrasyonu
+- Dinamik Form Rendering
+- QR Code parsing
+- MES entegrasyonu (`mes-admin`)
+- Rol bazlı yetkilendirme yapısı
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📦 Temel Özellikler
 
-## Deploy on Vercel
+- ✅ QR bazlı istasyon tanıma
+- ✅ Dinamik form oluşturma
+- ✅ Merkezi form tanımı yönetimi
+- ✅ Operatör dostu arayüz
+- ✅ Üretim verisi kaydı
+- ✅ İstasyon bazlı validasyon
+- ✅ Rol bazlı erişim kontrolü
+- ✅ İzlenebilirlik desteği
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔄 karluna-mes-admin Entegrasyonu
+
+Batline, form tanımlarını merkezi olarak yönetilen `mes-admin` projesinden almaktadır.
+
+Bu sayede:
+
+- Yeni form eklemek için Batline tarafında deploy gerekmez
+- Form değişiklikleri merkezi olarak yönetilir
+- İstasyon bazlı form ataması yapılabilir
+- Esnek ve ölçeklenebilir yapı sağlanır
+- Versiyonlanabilir form yönetimi mümkün olur
+
+---
+
+## 🗂 Proje Yapısı
+
+```
+
+/app
+/components
+/services
+/utils
+/hooks
+/types
+
+````
+
+---
+
+## 🛠 Kurulum
+
+```bash
+git clone https://github.com/beyza-acikgoz/batline.git
+cd batline
+npm install
+npm run dev
+````
+
+Production build almak için:
+
+```bash
+npm run build
+npm start
+```
+
+---
+
+## 🔐 Yetkilendirme & Güvenlik
+
+* Rol bazlı erişim kontrolü (Operatör / Admin)
+* İstasyon bazlı işlem yetkisi
+* Form validasyon mekanizmaları
+* Veri bütünlüğü kontrolleri
+
+---
+
+## 📊 Örnek Kullanım Senaryosu
+
+> Operatör "Cell Assembly" istasyonunda QR kod okutur.
+> Sistem ilgili montaj kontrol formunu açar.
+> Operatör seri numarası, voltaj, sıcaklık gibi alanları doldurur.
+> Veri kaydedilir ve ilgili üretim partisi ile ilişkilendirilir.
+> Üretim süreci boyunca tüm işlemler izlenebilir hale gelir.
+
+---
+
+## 🎯 Sağlanan Kazanımlar
+
+* 📄 Kağıtsız üretim
+* ⚡ Hızlı veri girişi
+* 🔎 Tam izlenebilirlik
+* 📈 Denetim süreçlerinde kolaylık
+* 🛡 Hatalı üretim tespiti
+* 🏭 Dijital üretim altyapısı
+
+---
+
+## 📌 Gelecek Geliştirmeler
+
+* 📊 Dashboard & analiz ekranları
+* 📈 Gerçek zamanlı istasyon izleme
+* 🔔 Hata alarm sistemi
+* 📱 Gelişmiş mobil optimizasyon
+* 🏭 ERP entegrasyonu
+* 📦 Üretim performans metrikleri
+
+---
+
+## 👩‍💻 Proje Sahibi
+
+**Beyza Açıkgöz**
+📧 [beyza-ecem2001@hotmail.com](mailto:beyza-ecem2001@hotmail.com)
+🔗 LinkedIn: [https://www.linkedin.com/in/beyzaacikgoz/](https://www.linkedin.com/in/beyza-a%C3%A7%C4%B1kg%C3%B6z/)
+
+---
+
+## 📄 Lisans
+
+Bu proje şirket içi kullanım amacıyla geliştirilmiştir.
+
+```
