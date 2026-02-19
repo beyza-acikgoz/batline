@@ -40,7 +40,7 @@ QR Scanner
 ↓
 Station Detection
 ↓
-Form Definition (karluna-mes-admin)
+Form Definition (mes-admin)
 ↓
 Dynamic Form Rendering (Next.js)
 ↓
