@@ -213,7 +213,7 @@ export default function LoginPage() {
                 
                 <Typography
                 component={LinkStyled}
-                href="/forgot-password"
+                href="/forgotPassword"
                 variant="body2"
                 >
                 Şifremi Unuttum?

@@ -1,4 +1,4 @@
-import { pool } from "@/lib/db";
+import { query } from "@/lib/db";
 
 const ORDER = [
   "PackLoad",
@@ -23,42 +23,30 @@ export async function POST(req: Request) {
 
   const prev = ORDER[idx - 1];
 
-  const client = await pool.connect();
-  try {
-    await client.query("BEGIN");
+  const rows = await query(
+    `SELECT qr_text 
+     FROM karluna_mes_batline_stations_moments
+     WHERE station_id=$1 AND product_id=true`,
+    [prev]
+  );
 
-    const { rows } = await client.query(
-      `SELECT qr_text FROM karluna_mes_batline_stations_moments
-       WHERE station_id=$1 AND product_id=true`,
-      [prev]
-    );
-
-    if (!rows[0]?.qr_text) {
-      await client.query("ROLLBACK");
-      return Response.json({ ok: true });
-    }
-
-    await client.query(
-      `UPDATE karluna_mes_batline_stations_moments
-       SET qr_text=$1, product_id=true
-       WHERE station_id=$2 AND product_id=false`,
-      [rows[0].qr_text, station]
-    );
-
-    await client.query(
-      `UPDATE karluna_mes_batline_stations_moments
-       SET qr_text=NULL, product_id=false, fc=false, qc=false, done=false
-       WHERE station_id=$1`,
-      [prev]
-    );
-
-    await client.query("COMMIT");
-    return Response.json({ moved: true });
-
-  } catch (e) {
-    await client.query("ROLLBACK");
-    throw e;
-  } finally {
-    client.release();
+  if (!rows[0]?.qr_text) {
+    return Response.json({ ok: true });
   }
+
+  await query(
+    `UPDATE karluna_mes_batline_stations_moments
+     SET qr_text=$1, product_id=true
+     WHERE station_id=$2 AND product_id=false`,
+    [rows[0].qr_text, station]
+  );
+
+  await query(
+    `UPDATE karluna_mes_batline_stations_moments
+     SET qr_text=NULL, product_id=false, fc=false, qc=false, done=false
+     WHERE station_id=$1`,
+    [prev]
+  );
+
+  return Response.json({ moved: true });
 }

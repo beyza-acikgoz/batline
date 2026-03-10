@@ -1,43 +1,31 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
 
-type JwtUser = {
-  firstName: string;
-  lastName: string;
-  role: string;
-  rework: boolean;
-};
-
-export function GET(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-
-  if (!token) {
-    return NextResponse.json(
-      { success: false },
-      { status: 401 }
-    );
-  }
-
+export async function GET() {
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET!
-    ) as JwtUser;
+    const cookieStore = await import("next/headers").then(m => m.cookies());
+    const token = cookieStore.get("token")?.value;
+
+    if (!token) {
+      return NextResponse.json({ success: false }, { status: 401 });
+    }
+
+    // JWT payload'ı hızlı decode (verify middleware'de yapılmalı)
+    const payload = JSON.parse(
+      Buffer.from(token.split(".")[1], "base64").toString()
+    );
 
     return NextResponse.json({
       success: true,
       user: {
-        firstName: decoded.firstName,
-        lastName: decoded.lastName,
-        role: decoded.role,
-        rework: decoded.rework,
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        role: payload.role,
+        rework: payload.rework,
+        roleDescription: payload.roleDescription,
       },
     });
-  } catch {
-    return NextResponse.json(
-      { success: false },
-      { status: 401 }
-    );
+  } catch (err) {
+    console.error("ME API ERROR:", err);
+    return NextResponse.json({ success: false }, { status: 401 });
   }
 }

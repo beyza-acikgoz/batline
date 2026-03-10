@@ -2,13 +2,13 @@ import Header from "@/components/Header";
 import QrScanner from "@/components/QrScanner";
 
 export default async function DashboardPage() {
-  const res = await fetch("http://localhost:3000/api/module-procedure?qr=00012345", {
-    cache: "no-store",
-  });
+  // const res = await fetch("http://localhost:3000/api/module-procedure?qr=00012345", {
+  //   cache: "no-store",
+  // });
 
 
-  const data = await res.json();
-  console.log(data);
+  // const data = await res.json();
+  // console.log(data);
 
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">

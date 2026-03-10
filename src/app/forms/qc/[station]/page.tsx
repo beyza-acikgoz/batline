@@ -48,23 +48,22 @@ export default function QcFormPage() {
     formState: { errors },
   } = useForm();
 
-  /* ================= LOAD USER ================= */
+/* ================= LOAD USER FROM COOKIE ================= */
   useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const res = await fetch("/api/me", {
-          credentials: "include",
-        });
-        const data = await res.json();
-        if (data?.success && data.user) {
-          setUser(data.user);
-        }
-      } catch (err) {
-        console.error("User load error", err);
-      }
-    };
+    const match = document.cookie
+      .split("; ")
+      .find((c) => c.startsWith("user="));
 
-    loadUser();
+    if (!match) return;
+
+    try {
+      const parsed = JSON.parse(
+        decodeURIComponent(match.split("=")[1])
+      );
+      setUser(parsed);
+    } catch {
+      setUser(null);
+    }
   }, []);
 
   /* ================= LOAD FORM SCHEMA ================= */

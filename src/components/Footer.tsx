@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
         {/* Logo ve iletişim yan yana */}
         <div className="flex items-center space-x-4">
           <LogoLogican />
-          <Link href="/contact" className="hover:underline text-sm">
+          <Link href="https://logican.com.tr/about-us/contact-us/" className="hover:underline text-sm">
             İletişim
           </Link>
         </div>

@@ -1,9 +1,9 @@
-import { pool } from "@/lib/db";
+import { query } from "@/lib/db";
 
 export async function POST(req: Request) {
   const { emptiedStation } = await req.json();
 
-  await pool.query(
+  await query(
     "SELECT move_qr_after_delay($1)",
     [emptiedStation]
   );

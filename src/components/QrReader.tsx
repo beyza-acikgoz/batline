@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useState } from "react";
 import {
   Box,
@@ -11,9 +11,8 @@ import {
   Button,
   Alert,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/navigation";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 interface QrReaderProps {
   qrValue: string;
@@ -30,9 +29,31 @@ const QrReader: React.FC<QrReaderProps> = ({ qrValue, onQrChange }) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const mode = prefersDarkMode ? "dark" : "light";
 
-  // QR format
   const qrRegex = /^([GMBW])\*S(\d{4})(\d{4})(\d{4})$/;
 
+  const safeFetch = async (url: string, options: RequestInit) => {
+    try {
+      const res = await fetch(url, options);
+
+      const text = await res.text();
+
+      if (!text) {
+        return { ok: false, data: { message: "Boş sunucu cevabı" } };
+      }
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        return { ok: false, data: { message: "Geçersiz JSON cevabı" } };
+      }
+
+      return { ok: res.ok, data };
+    } catch (err) {
+      console.error("Network error:", err);
+      return { ok: false, data: { message: "Sunucuya ulaşılamıyor" } };
+    }
+  };
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.trim();
@@ -66,14 +87,18 @@ const QrReader: React.FC<QrReaderProps> = ({ qrValue, onQrChange }) => {
 
     setError(null);
 
-    //  BACKEND’E SOR
-    const res = await fetch("/api/qr/check", {
+    const response = await safeFetch("/api/qr/check", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ qr: value }),
     });
 
-    const data = await res.json();
+    if (!response.ok) {
+      setError(response.data.message || "Sunucu hatası");
+      return;
+    }
+
+    const data = response.data;
 
     switch (data.action) {
       case "CONFIRM_NEW":
@@ -82,51 +107,49 @@ const QrReader: React.FC<QrReaderProps> = ({ qrValue, onQrChange }) => {
         break;
 
       case "OPEN_FC":
-        router.push(
-          `/forms/fc/${data.station}?qr=${encodeURIComponent(value)}`
-        );
+        router.push(`/forms/fc/${data.station}?qr=${encodeURIComponent(value)}`);
         break;
 
       case "OPEN_QC":
-        router.push(
-          `/forms/qc/${data.station}?qr=${encodeURIComponent(value)}`
-        );
+        router.push(`/forms/qc/${data.station}?qr=${encodeURIComponent(value)}`);
         break;
 
       case "WARNING":
         setError(data.message);
         break;
+
+      default:
+        setError("Bilinmeyen işlem türü");
     }
   };
 
-const handleConfirm = async () => {
-  setDialogOpen(false);
+  const handleConfirm = async () => {
+    setDialogOpen(false);
 
-  const res = await fetch("/api/qr/confirm", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      qr: qrValue,
-      product_id: true, // üretim onayı ile birlikte id true gönderiliyor
-    }),
-  });
+    const response = await safeFetch("/api/qr/confirm", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ qr: qrValue, product_id: true }),
+    });
 
-  const data = await res.json();
+    if (!response.ok) {
+      setError(response.data.message || "Onay sırasında hata");
+      return;
+    }
 
-  if (data.action === "OPEN_FC") {
-    router.push(`/forms/fc/${data.station}`);
-  }
-};
-
+    if (response.data.action === "OPEN_FC") {
+      router.push(`/forms/fc/${response.data.station}`);
+    }
+  };
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" gap={4} p={4}>
       <Box textAlign="center" width="100%" maxWidth={400}>
-<Typography
+        <Typography
           variant="body1"
           gutterBottom
           sx={{
-            fontWeight: "500",
+            fontWeight: 500,
             color: mode === "dark" ? "#F8F7FA" : "#25293C",
           }}
         >

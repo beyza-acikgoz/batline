@@ -1,31 +1,39 @@
-"use client";
+'use client';
 
-import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 
-export default function ClientLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const pathname = usePathname();
-  const isLoginPage = pathname === "/login";
-  const isUnauthorizedPage = pathname === "/unauthorized";
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
+  const checkAuth = async () => {
+    try {
+      const res = await fetch("/api/me", { credentials: "include" });
+      const data = await res.json();
+      setIsLoggedIn(data?.success ?? false);
+    } catch {
+      setIsLoggedIn(false);
+    }
+  };
+
+  useEffect(() => {
+    checkAuth();
+
+    const handleLogout = () => setIsLoggedIn(false);
+    window.addEventListener("logout", handleLogout);
+
+    return () => window.removeEventListener("logout", handleLogout);
+  }, []);
 
   return (
     <>
-      {!isLoginPage && !isUnauthorizedPage && <Header />}
+      {isLoggedIn && <Header />}
 
       <main
-        className={`flex-1 w-full ${
-          isLoginPage ? "p-0" : "px-4 sm:px-8 py-4 sm:py-6"
-        } overflow-y-auto`}
-        style={!isLoginPage ? { paddingTop: "var(--header-height)" } : {}}
+        className="flex-1 w-full min-h-screen"
+        style={isLoggedIn ? { paddingTop: "var(--header-height)" } : {}}
       >
-        <div className={`flex-1 ${isLoginPage ? "p-0" : "p-8"}`}>
-          {children}
-        </div>
+        {children}
       </main>
     </>
   );
