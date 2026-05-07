@@ -66,9 +66,6 @@ const Header: React.FC = () => {
         Rework Bitir
       </Button>
 
-      <Button fullWidth variant="contained" onClick={() => router.push('/modline')} sx={{ backgroundColor: "#476C9B" }}>
-        Modline VI
-      </Button>
     </>
   );
 
