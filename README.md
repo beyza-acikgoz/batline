@@ -78,7 +78,7 @@ Data Storage & Traceability
 
 ---
 
-## 🔄 karluna-mes-admin Entegrasyonu
+## 🔄 mes-admin Entegrasyonu
 
 Batline, form tanımlarını merkezi olarak yönetilen `mes-admin` projesinden almaktadır.
 
